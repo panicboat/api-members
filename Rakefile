@@ -4,15 +4,3 @@
 require_relative 'config/application'
 
 Rails.application.load_tasks
-
-Rake::Task['db:migrate'].enhance do
-  Rake::Task[:after_migrate].invoke if Rails.env.development?
-end
-
-task :after_migrate do
-  Rake::Task[:create_erd].invoke
-end
-
-task :create_erd do
-  sh 'bin/rake erd title=members filename=db/schema sort=false'
-end
