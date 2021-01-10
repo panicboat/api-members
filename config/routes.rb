@@ -1,3 +1,6 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  mount Panicboat::Engine, at: '/panicboat'
+
+  resources :health,        only: %i[index]
+  resources :members,       only: %i[index show create update destroy]
 end
