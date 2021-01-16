@@ -1,32 +1,51 @@
 require 'test_helper'
 
-class MembersControllerTest < ActionDispatch::IntegrationTest
+class AgenciesControllerTest < ActionDispatch::IntegrationTest
+  fixtures :members
+
   setup do
-    @member = ::Members::Operation::Create.call({ params: { email: 'spec@panicboat.net', name: 'Spec' } })
+    WebMock.stub_request(:get, "#{ENV['HTTP_IAM_URL']}/tokens").to_return(
+      body: File.read("#{Rails.root}/test/fixtures/files/platform_iam_list_token.json"),
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    )
+    WebMock.stub_request(:get, "#{ENV['HTTP_IAM_URL']}/users").to_return(
+      body: File.read("#{Rails.root}/test/fixtures/files/platform_iam_get_user.json"),
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    )
+    WebMock.stub_request(:get, "#{ENV['HTTP_IAM_URL']}/permissions/00000000-0000-0000-0000-000000000000").to_return(
+      body: File.read("#{Rails.root}/test/fixtures/files/platform_iam_get_permission.json"),
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    )
+    @headers = { "#{::RequestHeader::USER_CLAIMS}": 'dummy' }
   end
 
   test 'Index' do
-    get '/members'
+    get '/members', headers: @headers
     assert_response :success
   end
 
   test 'Show' do
-    get "/members/#{@member[:model].id}"
+    get "/members/#{members(:spec).id}", headers: @headers
     assert_response :success
   end
 
   test 'Create' do
-    post '/members', params: { email: 'spec1@panicboat.net', name: 'Spec1' }
+    params = { email: 'spec@panicboat.net', name: 'Spec' }
+    post '/members', headers: @headers, params: params
     assert_response :success
   end
 
   test 'Update' do
-    patch "/members/#{@member[:model].id}", params: { name: 'Spec9999' }
+    params = { email: 'spec@panicboat.net', name: 'Spec' }
+    patch "/members/#{members(:spec).id}", headers: @headers, params: params
     assert_response :success
   end
 
   test 'Destroy' do
-    delete "/members/#{@member[:model].id}"
+    delete "/members/#{members(:spec).id}", headers: @headers
     assert_response :success
   end
 end
