@@ -2,11 +2,11 @@ module Members::Contract
   class Create < Abstract::Contract
     property  :email
     property  :name
-    property  :description
+    property  :note
 
-    validates :email,       presence: true, format: { with: FORMAT_EMAIL }
-    validates :name,        presence: true
-    validates :description, presence: false
+    validates :email, presence: true, format: { with: FORMAT_EMAIL }
+    validates :name,  presence: true
+    validates :note,  presence: false
     validate  :uniqueness
 
     def uniqueness

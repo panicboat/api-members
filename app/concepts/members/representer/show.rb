@@ -4,7 +4,7 @@ module Members::Representer
     property :email
     property :name
     property :image
-    property :description
+    property :note
     property :created_at
     property :updated_at
   end
