@@ -1,2 +1,2 @@
-class ApplicationController < Panicboat::ApplicationController
+class ApplicationController < Panicboat::AbstractController
 end

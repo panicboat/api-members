@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 2021_01_10_000000) do
     t.string "email", null: false, comment: "メールアドレス"
     t.string "name", null: false, comment: "名前"
     t.string "image", comment: "アイコン"
-    t.string "description", comment: "コメント"
+    t.string "note", comment: "コメント"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_members_on_email", unique: true
