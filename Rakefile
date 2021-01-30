@@ -14,5 +14,5 @@ task :after_migrate do
 end
 
 task :create_erd do
-  sh 'bin/rake erd title=skelton filename=db/schema sort=false'
+  sh 'bin/rake erd title=members filename=db/schema sort=false'
 end

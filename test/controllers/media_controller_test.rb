@@ -1,7 +1,7 @@
 require 'test_helper'
 
-class MembersControllerTest < ActionDispatch::IntegrationTest
-  fixtures :members
+class MediaControllerTest < ActionDispatch::IntegrationTest
+  fixtures :media
 
   def setup
     @options = { action: '00000000-0000-0000-0000-000000000000', current_user: { email: 'spec@panicboat.net' } }
@@ -14,37 +14,37 @@ class MembersControllerTest < ActionDispatch::IntegrationTest
 
   test 'Index' do
     ::Panicboat::AbstractController.stub_any_instance(:_options, @options) do
-      get '/members', headers: @headers
+      get "/members/#{media(:spec).member_id}/media", headers: @headers
     end
     assert_response :success
   end
 
   test 'Show' do
     ::Panicboat::AbstractController.stub_any_instance(:_options, @options) do
-      get "/members/#{members(:spec).id}", headers: @headers
+      get "/members/#{media(:spec).member_id}/media/#{media(:spec).id}", headers: @headers
     end
     assert_response :success
   end
 
   test 'Create' do
     ::Panicboat::AbstractController.stub_any_instance(:_options, @options) do
-      params = { email: 'spec@panicboat.net', name: 'Spec' }
-      post '/members', headers: @headers, params: params
+      params = { name: 'Spec', url: 'https://spec.panicboat.net' }
+      post "/members/#{media(:spec).member_id}/media", headers: @headers, params: params
     end
     assert_response :success
   end
 
   test 'Update' do
     ::Panicboat::AbstractController.stub_any_instance(:_options, @options) do
-      params = { email: 'spec@panicboat.net', name: 'Spec' }
-      patch "/members/#{members(:spec).id}", headers: @headers, params: params
+      params = { name: 'Spec', url: 'https://spec.panicboat.net' }
+      patch "/members/#{media(:spec).member_id}/media/#{media(:spec).id}", headers: @headers, params: params
     end
     assert_response :success
   end
 
   test 'Destroy' do
     ::Panicboat::AbstractController.stub_any_instance(:_options, @options) do
-      delete "/members/#{members(:spec).id}", headers: @headers
+      delete "/members/#{media(:spec).member_id}/media/#{media(:spec).id}", headers: @headers
     end
     assert_response :success
   end

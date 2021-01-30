@@ -1,8 +1,8 @@
 require 'test_helper'
 
-module Members
+module Media
   class ShowTest < ActionDispatch::IntegrationTest
-    fixtures :members
+    fixtures :media
 
     setup do
       @current_user = JSON.parse({ name: 'Spec' }.to_json, object_class: OpenStruct)
@@ -14,16 +14,16 @@ module Members
     end
 
     def default_params
-      { email: 'spec@panicboat.net', name: 'Spec' }
+      { member_id: media(:spec).member_id, name: 'Spec', url: 'https://spec.panicboat.net' }
     end
 
     def expected_attrs
-      { email: 'spec@panicboat.net', name: 'Spec' }
+      { member_id: media(:spec).member_id, name: 'Spec', url: 'https://spec.panicboat.net' }
     end
 
     test 'Show Data' do
-      ctx = Operation::Show.call(params: { id: members(:spec).id }, current_user: @current_user, action: 'DUMMY_ACTION_ID')
-      assert_equal members(:spec).name, ctx[:model].name
+      ctx = Operation::Show.call(params: { id: media(:spec).id }, current_user: @current_user, action: 'DUMMY_ACTION_ID')
+      assert_equal media(:spec).name, ctx[:model].name
     end
 
     test 'Show No Data' do

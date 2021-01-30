@@ -1,8 +1,8 @@
 require 'test_helper'
 
-module Members
+module Media
   class IndexTest < ActionDispatch::IntegrationTest
-    fixtures :members
+    fixtures :media
 
     setup do
       @current_user = JSON.parse({ name: 'Spec' }.to_json, object_class: OpenStruct)
@@ -14,22 +14,22 @@ module Members
     end
 
     def default_params
-      { email: 'spec@panicboat.net', name: 'Spec' }
+      { member_id: media(:spec).member_id, name: 'Spec', url: 'https://spec.panicboat.net' }
     end
 
     def expected_attrs
-      { email: 'spec@panicboat.net', name: 'Spec' }
+      { member_id: media(:spec).member_id, name: 'Spec', url: 'https://spec.panicboat.net' }
     end
 
     test 'Index Data' do
       ctx = Operation::Index.call(params: {}, current_user: @current_user, action: 'DUMMY_ACTION_ID')
-      assert ctx[:model].Members.present?
-      assert_equal ::Member.all.count, ctx[:model].Members.length
+      assert ctx[:model].Media.present?
+      assert_equal ::Medium.all.count, ctx[:model].Media.length
     end
 
     test 'Index No Data' do
-      ::Member.all.each(&:destroy)
-      assert_equal [], Operation::Index.call(params: {}, current_user: @current_user, action: 'DUMMY_ACTION_ID')[:model].Members
+      ::Medium.all.each(&:destroy)
+      assert_equal [], Operation::Index.call(params: {}, current_user: @current_user, action: 'DUMMY_ACTION_ID')[:model].Media
     end
   end
 end

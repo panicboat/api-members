@@ -1,8 +1,8 @@
 require 'test_helper'
 
-module Members
+module Media
   class CreateTest < ActionDispatch::IntegrationTest
-    fixtures :members
+    fixtures :media
 
     setup do
       @current_user = JSON.parse({ name: 'Spec' }.to_json, object_class: OpenStruct)
@@ -14,11 +14,11 @@ module Members
     end
 
     def default_params
-      { email: 'spec@panicboat.net', name: 'Spec' }
+      { member_id: media(:spec).member_id, name: 'Spec', url: 'https://spec.panicboat.net' }
     end
 
     def expected_attrs
-      { email: 'spec@panicboat.net', name: 'Spec' }
+      { member_id: media(:spec).member_id, name: 'Spec', url: 'https://spec.panicboat.net' }
     end
 
     test 'Permission Deny' do
@@ -34,12 +34,12 @@ module Members
       assert_equal 'Spec', ctx[:model].name
     end
 
-    test 'Create Duplicate Email' do
+    test 'Create Duplicate Url' do
       Operation::Create.call(params: default_params, current_user: @current_user, action: 'DUMMY_ACTION_ID')
       e = assert_raises InvalidParameters do
         Operation::Create.call(params: default_params, current_user: @current_user, action: 'DUMMY_ACTION_ID')
       end
-      assert_equal ['Email has already been taken'], JSON.parse(e.message)
+      assert_equal ['Url has already been taken'], JSON.parse(e.message)
     end
   end
 end

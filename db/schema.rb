@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_10_000000) do
+ActiveRecord::Schema.define(version: 2021_01_01_010000) do
+
+  create_table "media", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", comment: "メディア", force: :cascade do |t|
+    t.string "name", null: false, comment: "名前"
+    t.string "member_id", limit: 36, null: false, comment: "メンバーID"
+    t.string "url", null: false, comment: "URL"
+    t.string "note", comment: "コメント"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["member_id"], name: "fk_rails_727af2407d"
+    t.index ["url"], name: "index_media_on_url", unique: true
+  end
 
   create_table "members", id: :string, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", comment: "メンバー", force: :cascade do |t|
     t.string "email", null: false, comment: "メールアドレス"
@@ -22,4 +33,5 @@ ActiveRecord::Schema.define(version: 2021_01_10_000000) do
     t.index ["email"], name: "index_members_on_email", unique: true
   end
 
+  add_foreign_key "media", "members"
 end

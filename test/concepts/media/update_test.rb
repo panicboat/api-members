@@ -1,8 +1,8 @@
 require 'test_helper'
 
-module Members
-  class DestroyTest < ActionDispatch::IntegrationTest
-    fixtures :members
+module Media
+  class UpdateTest < ActionDispatch::IntegrationTest
+    fixtures :media
 
     setup do
       @current_user = JSON.parse({ name: 'Spec' }.to_json, object_class: OpenStruct)
@@ -14,29 +14,29 @@ module Members
     end
 
     def default_params
-      { email: 'spec@panicboat.net', name: 'Spec' }
+      { member_id: media(:spec).member_id, name: 'Spec', url: 'https://spec.panicboat.net' }
     end
 
     def expected_attrs
-      { email: 'spec@panicboat.net', name: 'Spec' }
+      { member_id: media(:spec).member_id, name: 'Spec', url: 'https://spec.panicboat.net' }
     end
 
-    test 'Permission Deny' do
+    test 'Permission Deny : No Session' do
       e = assert_raises InvalidPermissions do
-        Operation::Destroy.call(params: { id: members(:spec).id })
+        Operation::Update.call(params: { id: media(:spec).id, name: 'This is name.' })
       end
       assert_equal ['Permissions is invalid'], JSON.parse(e.message)
     end
 
-    test 'Destory Data' do
-      ctx = Operation::Destroy.call(params: { id: members(:spec).id }, current_user: @current_user, action: 'DUMMY_ACTION_ID')
+    test 'Update Data' do
+      ctx = Operation::Update.call(params: { id: media(:spec).id, name: 'This is name.' }, current_user: @current_user, action: 'DUMMY_ACTION_ID')
       assert ctx.success?
-      assert_equal [], ::Member.where({ id: members(:spec).id })
+      assert_equal 'This is name.', ctx[:model].name
     end
 
-    test 'Destroy No Data' do
+    test 'Update No Data' do
       e = assert_raises InvalidParameters do
-        Operation::Destroy.call(params: { id: -1 }, current_user: @current_user, action: 'DUMMY_ACTION_ID')
+        Operation::Update.call(params: { id: -1 })
       end
       assert_equal ['Parameters is invalid'], JSON.parse(e.message)
     end
