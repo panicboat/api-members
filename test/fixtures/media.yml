@@ -9,3 +9,4 @@ spec:
   member_id: 00000000-0000-0000-0000-000000000001
   name: Medium
   url: https://medium.panicboat.net
+  status: available

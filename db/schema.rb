@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 2021_01_01_010000) do
     t.string "name", null: false, comment: "名前"
     t.string "member_id", limit: 36, null: false, comment: "メンバーID"
     t.string "url", null: false, comment: "URL"
+    t.integer "status", limit: 3, null: false, comment: "ステータス"
     t.string "note", comment: "コメント"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
